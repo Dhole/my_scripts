@@ -30,6 +30,8 @@ ln -s ~/github/stlink/st-util ~/bin/st-util
 ln -s ~/github/stlink/st-info ~/bin/st-info
 ln -s ~/github/stlink/st-term ~/bin/st-term
 
+ln -s ~/github/stlink ~/stlink.git
+
 # Add udev rules to enable programming with st-link with regular user
 sudo cp ~/github/stlink/*.rules /etc/udev/rules.d/
 sudo service udev restart
