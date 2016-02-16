@@ -8,5 +8,5 @@ while read line
 do  
   beep -f ${line%% *} -l $(( ${line#* } * 150 ))
   sleep 0.01
-done < "notes2"
+done < "../tetris/notes2"
 
