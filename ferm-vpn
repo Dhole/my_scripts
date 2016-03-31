@@ -1,0 +1,37 @@
+#! /bin/sh
+
+CONFIG=/etc/ferm/ferm.conf
+
+# when connecting to a wifi with a captive portal, first run:
+# $ ferm.sh start
+# then open a web browser with the "pass" user: 
+# $ sudo -u pass -H midori
+# log in or whatever.  
+
+# Sometimes captive portals ask for accounts, avoid this
+# by setting wlan0 MAC to someone who has already logged in:
+# $ sudo -g wireshark wireshark # to find some candidate MAC addresses
+# or even better, disable Network Manager and scan with airodump-ng:
+# $ sudo airodump-ng  wlan0 # To scan for AP and clients
+# $ sudo airodump-ng --bssid 2C:95:7F:47:E1:88 wlan0 # just this AP
+
+# replace the MAC address with networkmanager or macchanger and reconnect:
+# $ macspoof.sh 24:0A:11:30:2B:4E
+# Once connection is successfull, start the VPN from networkmanager.
+
+case "$1" in
+    start)
+        # disable all the outcoing connections except for the user "pass"
+        sudo ferm $CONFIG
+        ;;
+    stop)
+        # enable all the outcoing connections
+        sudo ferm -F $CONFIG
+        ;;
+    *)
+        echo "Usage: ${$0} [start/stop]"
+        ;;
+esac
+
+# To run X apps with sudo from another user, add the user to the authorized
+# list for X; `xhost si:localuser:username`

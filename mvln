@@ -1,0 +1,34 @@
+#! /bin/sh
+
+set -e
+#set -x
+
+#mv $1
+#ln -s 
+
+dest=`echo $@ | awk '{print $NF}'`
+src=`echo $@ | awk '{$NF=""; print $0}'`
+dest=`readlink -f $dest` # get full path
+
+if [ "$#" -lt 2 ]
+then
+	echo "Usage: $0 src [src, ...] dst"
+	exit 1
+fi
+
+if [ -d $dest ]
+then
+	TYPE="dir"
+fi
+
+mv $src $dest
+
+if [ "$TYPE" = "dir" ]
+then
+	for s in $src
+	do
+		ln -s $dest/$s $s
+	done
+else
+	ln -s $dest $src	
+fi

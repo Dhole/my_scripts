@@ -1,0 +1,21 @@
+#! /bin/sh
+
+set -e
+set -x
+
+FILES="\
+$HOME/Documents/keepass.kdb \
+$HOME/.gnupg/pubring.gpg \
+$HOME/.gnupg/secring.gpg \
+$HOME/.gnupg/trustdb.gpg \
+$HOME/Documents/gpg/my_keys/*.asc \
+$HOME/.ssh/id_*"
+
+sudo cryptsetup luksOpen /dev/sdb2 my-disk
+sudo mount /dev/mapper/my-disk /mnt
+
+rsync -av ${FILES} /mnt/backup/
+
+sudo umount /mnt
+sudo cryptsetup luksClose my-disk
+sync

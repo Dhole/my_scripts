@@ -1,0 +1,19 @@
+#! /bin/sh
+
+set -x
+set -e
+
+if [ "$1" = "mount" ]
+then
+    sudo mv /boot /boot.0
+    sudo mkdir /boot
+    sudo cryptsetup luksOpen /dev/sdb1 grub_usb
+    sudo mount /dev/mapper/grub_usb /boot
+    echo "You can now run 'sudo apt upgrade'"
+elif [ "$1" = "umount" ]
+then
+    sudo umount /dev/mapper/grub_usb
+    sudo cryptsetup luksClose grub_usb
+    sudo rmdir /boot
+    sudo mv /boot.0 /boot
+fi

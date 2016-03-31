@@ -1,0 +1,13 @@
+#! /bin/sh
+
+URL=$1
+
+if [ "$2" = "" ]
+then
+    QUALITY=720
+else
+    QUALITY="$2"
+fi
+
+# For some reason `torify mpv $URL` system's memory, hanging it :(  So I came up with this hack:
+torify youtube-dl -f "best[height<=$QUALITY]" "$URL" -q -o - | mpv --cache=yes --cache-secs=10 -

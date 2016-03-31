@@ -1,0 +1,3 @@
+#! /bin/sh
+
+wminput -c ~/.CWiid/wminput.conf
