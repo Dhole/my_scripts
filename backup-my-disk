@@ -3,6 +3,8 @@
 set -e
 set -x
 
+# Backup my most important files in a USB disk I shall always carry.
+
 FILES="\
 $HOME/Documents/keepass.kdb \
 $HOME/.gnupg/pubring.gpg \

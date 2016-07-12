@@ -2,3 +2,4 @@
 
 sudo pip3 install --upgrade mps-youtube
 sudo pip install --upgrade youtube_dl
+sudo pip install --upgrade youtube-dl
