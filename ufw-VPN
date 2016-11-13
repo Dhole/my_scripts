@@ -1,0 +1,38 @@
+#! /bin/sh
+
+UFW=/usr/sbin/ufw
+
+$UFW reset
+
+# Default policies
+$UFW default deny incoming
+$UFW default deny outgoing
+
+# Openvpn interface (adjust interface accordingly to your configuration)
+$UFW allow in on tun0
+$UFW allow out on tun0
+
+# Local Network (adjust ip accordingly to your configuration)
+$UFW allow in on wlan0 from 192.168.$1.0/24
+$UFW allow out on wlan0 to 192.168.$1.0/24
+$UFW allow in on eth0 from 192.168.$1.0/24
+$UFW allow out on eth0 to 192.168.$1.0/24
+
+# Openvpn (adjust port accordingly to your configuration)
+$UFW allow out on wlan0 to any port 2018
+$UFW allow in on wlan0 from any port 2018
+$UFW allow out on eth0 to any port 2018
+$UFW allow in on eth0 from any port 2018
+
+# $UFW allow out on wlan0 to any port 443
+# $UFW allow in on wlan0 from any port 443
+
+$UFW allow in from any to any port 53
+$UFW allow out from any to any port 53
+
+# DNS
+$UFW reload
+$UFW enable
+
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sysctl -w net.ipv6.conf.default.disable_ipv6=1

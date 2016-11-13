@@ -1,7 +1,7 @@
 #!/bin/sh
 
-xrandr --output LVDS1 --auto
-xrandr --output HDMI1 --off
-xrandr --output VGA1 --off
-pkill redshift
+xrandr --output LVDS-1 --auto
+xrandr --output HDMI-1 --off
+xrandr --output VGA-1 --off
+pkill -9 -f redshift
 ~/bin/redshift.sh &

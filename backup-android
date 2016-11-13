@@ -8,7 +8,7 @@ init() {
 	echo use chroot = false && echo read only = false'
 }
 
-DEST=/media/data0/moto_G/
+DEST=/media/data0/backups/moto_G/
 INTERNAL=/sdcard/
 FOLDERS="afwall
 DCIM
@@ -20,7 +20,12 @@ WhatsApp
 Telegram
 Pictures
 tomdroid
-00001.vcf"
+00001.vcf
+DroidShows
+osmand
+.aptoide
+Documents
+Movies"
 #FOLDERS=DCIM
 
 adb wait-for-device
@@ -35,7 +40,6 @@ do
 	--exclude=*cache* \
 	--exclude=*RIL_offline* \
 	--exclude=*thumbnails* \
-	--exclude=*WhatsApp/Media* \
 	--exclude=*WhatsApp/Profile\ Pictures* \
 	--exclude=*.obf \
 	--exclude=*BSD\ Now\ Mobile* \

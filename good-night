@@ -1,0 +1,8 @@
+#! /bin/sh
+
+set -x
+
+# xscreensaver-command -lock
+rdiff-backup --print-statistics --exclude "**.git" /media/data0/Documents \
+    green-local::/mnt/disk/backup/Documents
+systemctl suspend

@@ -1,0 +1,3 @@
+#! /bin/sh
+
+$HOME/git/wordpass/wordpass.py $HOME/git/wordpass/wordlist_cat.txt 150

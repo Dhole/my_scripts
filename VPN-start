@@ -1,0 +1,6 @@
+#! /bin/sh
+
+sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+cd ~/VPN
+sudo openvpn AirVPN_France_UDP-2018.ovpn

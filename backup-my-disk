@@ -6,14 +6,14 @@ set -x
 # Backup my most important files in a USB disk I shall always carry.
 
 FILES="\
-$HOME/Documents/keepass.kdb \
+$HOME/Documents/keepass.kdbx \
 $HOME/.gnupg/pubring.gpg \
 $HOME/.gnupg/secring.gpg \
 $HOME/.gnupg/trustdb.gpg \
 $HOME/Documents/gpg/my_keys/*.asc \
-$HOME/.ssh/id_*"
+$HOME/.ssh/*"
 
-sudo cryptsetup luksOpen /dev/sdb2 my-disk
+sudo cryptsetup luksOpen /dev/disk/by-uuid/57d7dadc-cb54-4b2b-9190-429de0578580 my-disk
 sudo mount /dev/mapper/my-disk /mnt
 
 rsync -av ${FILES} /mnt/backup/
