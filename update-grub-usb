@@ -5,11 +5,11 @@ set -e
 
 sudo mv /boot /boot.0
 sudo mkdir /boot
-sudo cryptsetup luksOpen /dev/sdb1 grub_usb
+sudo cryptsetup luksOpen /dev/sdc1 grub_usb
 sudo mount /dev/mapper/grub_usb /boot
 
 sudo cp -pr /boot.0/* /boot/
-sudo grub-install /dev/sdb
+sudo grub-install /dev/sdc
 sudo update-grub2
 
 sudo umount /dev/mapper/grub_usb

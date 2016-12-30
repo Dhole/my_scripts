@@ -18,6 +18,10 @@ $UFW allow out on wlan0 to 192.168.$1.0/24
 $UFW allow in on eth0 from 192.168.$1.0/24
 $UFW allow out on eth0 to 192.168.$1.0/24
 
+# Allow VirtualBox network
+$UFW allow in on vboxnet0 from 192.168.56.0/24
+$UFW allow out on vboxnet0 to 192.168.56.0/24
+
 # Openvpn (adjust port accordingly to your configuration)
 $UFW allow out on wlan0 to any port 2018
 $UFW allow in on wlan0 from any port 2018

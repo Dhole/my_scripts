@@ -1,0 +1,3 @@
+#! /bin/sh
+
+find $1 -exec stat \{} --printf="%y %n\n" \; | sort -n -r | less

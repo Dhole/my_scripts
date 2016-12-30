@@ -3,6 +3,9 @@
 set -x
 
 # xscreensaver-command -lock
+rsync -av --delete --exclude=".notmuch" ~/Mail green-local:/mnt/disk/backup/
+rsync -av ~/.ssh ~/.gnupg ~/.purple green-local:/mnt/disk/backup/home/
 rdiff-backup --print-statistics --exclude "**.git" /media/data0/Documents \
     green-local::/mnt/disk/backup/Documents
+
 systemctl suspend

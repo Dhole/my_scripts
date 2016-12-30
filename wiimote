@@ -1,3 +1,8 @@
 #! /bin/sh
 
-wminput -c ~/.CWiid/wminput.conf
+if [ "$1" = "gamepad" ]
+then
+    wminput -c /home/black/.CWiid/gamepad.conf
+else
+    wminput -c /home/black/.CWiid/wminput.conf
+fi

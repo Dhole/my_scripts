@@ -1,0 +1,131 @@
+#! /bin/sh
+
+set -e
+set -x
+
+REMOTE_USER=personal-backup
+HOST="192.168.0.166"
+
+SSH_KEY=~/.ssh/$REMOTE_USER
+SSH_OPT="-i $SSH_KEY"
+
+SRC="$HOME/Documents/"
+DST="/mnt/disk/backup/Documents"
+
+RSYNC_OPT="-aPh --delete --delete-excluded"
+EXCLUDE="--exclude \"**.git\""
+
+# Number of snapshots to keep for every period of time
+DAILY=7
+WEEKLY=4
+MONTHLY=4
+
+########################
+# END OF CONFIGURATION #
+########################
+
+DATE=`date "+%s.%Y-%m-%d"`
+
+echo "ls" | sftp $SSH_OPT $REMOTE_USER@$HOST
+
+if [ "$1" = "init" ]
+then
+    rsync $RSYNC_OPT -e "ssh $SSH_OPT" $EXCLUDE \
+      $SRC $REMOTE_USER@$HOST:$DST/$DATE
+else
+    rsync $RSYNC_OPT -e "ssh $SSH_OPT" $EXCLUDE \
+      --link-dest=$DST/current \
+      $SRC $REMOTE_USER@$HOST:$DST/$DATE
+fi
+
+# Update soft link to current backup
+echo "\
+cd $DST
+rm current
+ln -s $DATE current
+" | sftp $SSH_OPT $REMOTE_USER@$HOST
+
+### Delete old backups
+
+# Get a list of all snapshots
+SNAPSHOTS=`echo "\
+cd $DST
+ls -l1" \
+    | sftp $SSH_OPT $REMOTE_USER@$HOST | tail -n +3 | grep -v "current"`
+
+# Get the timestamp from each snapshot
+TIMESTAMPS=`printf "$SNAPSHOTS" | cut -f 1 -d '.' | sort -n -r`
+
+#printf "$TIMESTAMPS\n"
+
+REMOVE_LIST=""
+
+DAY=`echo "3600 * 24" | bc`
+WEEK=`echo "$DAY * 7" | bc`
+MONTH=`echo "$DAY * 30" | bc`
+
+SHORT_DATE=`echo -n $DATE | cut -f 2 -d '.'`
+_TODAY=`date -d $SHORT_DATE "+%s"`
+TODAY=`echo "$_TODAY + $DAY - 1" | bc`
+
+# Get a list of snapshots to delete
+for period in $DAY $WEEK $MONTH
+do
+    if [ "$period" = "$DAY" ]
+    then
+        num=$DAILY
+    elif [ "$period" = "$WEEK" ]
+    then
+        num=$WEEKLY
+    elif [ "$period" = "$MONTH" ]
+    then
+        num=$MONTHLY
+    fi
+
+    for i in $(seq 1 $num)
+    do
+        MAX=`echo "$TODAY - ($i * $period)" | bc`
+        MIN=`echo "$TODAY - (($i+1) * $period)" | bc`
+        #echo "From `date -d "@$MAX"` to `date -d "@$MIN"`"
+        if [ "$period" = "$MONTH" ] && [ "$i" = "$num" ]
+        then
+            REMOVE=`printf "$TIMESTAMPS" | awk '$1 <= MAX { print $1 }' MAX=$MAX | tail -n +2`
+        else
+            REMOVE=`printf "$TIMESTAMPS" | awk '$1 <= MAX && $1 > MIN { print $1 }' MAX=$MAX MIN=$MIN | tail -n +2`
+        fi
+        #echo $REMOVE
+        if [ ! "$REMOVE" = "" ]
+        then
+            REMOVE_LIST="$REMOVE_LIST $REMOVE"
+        fi
+    done
+done
+
+# Generate a command to move all expired snapshots to the trash folder
+REMOVE_LIST_CMD=""
+for elem in $REMOVE_LIST
+do
+    filename=`date -d "@$elem" "+%s.%Y-%m-%d"`
+    REMOVE_LIST_CMD="$REMOVE_LIST_CMD\nrename $filename trash/$filename"
+done
+
+#echo "Delete:"
+#printf "$REMOVE_LIST_CMD\n"
+
+# Move expired snapshots to trash
+printf "\
+cd $DST
+mkdir empty
+mkdir trash
+$REMOVE_LIST_CMD
+" | sftp $SSH_OPT $REMOTE_USER@$HOST
+
+# Empty trash
+ssh $SSH_OPT $REMOTE_USER@$HOST "rsync -a --delete $DST/empty/ $DST/trash"
+
+# Remove temporary folders
+printf "\
+cd $DST
+rmdir empty
+rmdir trash
+" | sftp $SSH_OPT $REMOTE_USER@$HOST
