@@ -13,7 +13,7 @@ SRC="$HOME/Documents/"
 DST="/mnt/disk/backup/Documents"
 
 RSYNC_OPT="-aPh --delete --delete-excluded"
-EXCLUDE="--exclude \"**.git\""
+EXCLUDE="--exclude .git/"
 
 # Number of snapshots to keep for every period of time
 DAILY=7

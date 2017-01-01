@@ -1,42 +1,58 @@
 #! /bin/sh
 
-UFW=/usr/sbin/ufw
+ufw_rules () {
+    UFW=/usr/sbin/ufw
+    VPN_PORT=2018
+    #VPN_PORT=443
+    #DEVS="wlan0 eth0"
+    DEVS="enp0s31f6 wlp4s0"
 
-$UFW reset
+    if [ "$1" = "" ]
+    then
+        THIRD=0
+    else
+        THIRD=$1 
+    fi
 
-# Default policies
-$UFW default deny incoming
-$UFW default deny outgoing
+    $UFW reset
 
-# Openvpn interface (adjust interface accordingly to your configuration)
-$UFW allow in on tun0
-$UFW allow out on tun0
+    # Default policies
+    $UFW default deny incoming
+    $UFW default deny outgoing
 
-# Local Network (adjust ip accordingly to your configuration)
-$UFW allow in on wlan0 from 192.168.$1.0/24
-$UFW allow out on wlan0 to 192.168.$1.0/24
-$UFW allow in on eth0 from 192.168.$1.0/24
-$UFW allow out on eth0 to 192.168.$1.0/24
+    # Openvpn interface (adjust interface accordingly to your configuration)
+    $UFW allow in  on tun0
+    $UFW allow out on tun0
 
-# Allow VirtualBox network
-$UFW allow in on vboxnet0 from 192.168.56.0/24
-$UFW allow out on vboxnet0 to 192.168.56.0/24
+    for dev in $DEVS
+    do
+        # Local Network (adjust ip accordingly to your configuration)
+        $UFW allow in  on $dev from 192.168.$THIRD.0/24
+        $UFW allow out on $dev to   192.168.$THIRD.0/24
 
-# Openvpn (adjust port accordingly to your configuration)
-$UFW allow out on wlan0 to any port 2018
-$UFW allow in on wlan0 from any port 2018
-$UFW allow out on eth0 to any port 2018
-$UFW allow in on eth0 from any port 2018
+        # Openvpn
+        $UFW allow out on $dev to   any port $VPN_PORT 
+        $UFW allow in  on $dev from any port $VPN_PORT 
+    done
 
-# $UFW allow out on wlan0 to any port 443
-# $UFW allow in on wlan0 from any port 443
+    # Allow VirtualBox network
+    $UFW allow in  on vboxnet0 from 192.168.56.0/24
+    $UFW allow out on vboxnet0 to   192.168.56.0/24
 
-$UFW allow in from any to any port 53
-$UFW allow out from any to any port 53
+    # DNS (in order to resolve openvpn server name)
+    $UFW allow in  from any to any port 53
+    $UFW allow out from any to any port 53
 
-# DNS
-$UFW reload
-$UFW enable
+    #$UFW reload
+    $UFW enable
 
-sysctl -w net.ipv6.conf.all.disable_ipv6=1
-sysctl -w net.ipv6.conf.default.disable_ipv6=1
+    sysctl -w net.ipv6.conf.all.disable_ipv6=1
+    sysctl -w net.ipv6.conf.default.disable_ipv6=1
+}
+
+if [ $(whoami) != "root" ]; then
+    echo "Switching to root"
+    sudo $0 $*
+else
+    ufw_rules $*
+fi
