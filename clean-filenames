@@ -1,0 +1,8 @@
+#! /bin/sh
+
+for f in *Trash*
+do
+    filename=`/bin/echo -E $f | grep -o "[^\\]*$"`
+    mv "$f" "$filename"
+    echo $filename
+done
