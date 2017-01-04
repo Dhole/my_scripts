@@ -60,7 +60,12 @@ if xrandr -q | grep "$DISP2 connected"; then
 
     if [ "$DISP2" = "DP1" ]
     then
-        xinput set-prop 19 "libinput Accel Speed" 1
+        # The logitech USB bluetooth dongle shows up as several devices...
+        IDS=`xinput | grep "Logitech USB Receiver" | grep "pointer" | grep -o -P "(?<=id=)[0-9]*" | tr '\n' ' '`
+        for id in $IDS
+        do
+            xinput set-prop $id "libinput Accel Speed" 1
+        done
     fi
 
     ~/bin/wall.sh &

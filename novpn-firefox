@@ -1,0 +1,4 @@
+#! /bin/sh
+
+xhost local:novpn
+sudo -iH -u novpn firejail --seccomp firefox

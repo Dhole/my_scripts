@@ -1,0 +1,25 @@
+#! /bin/sh
+
+# This requieres a user 'browsing' with access to the video group:
+# `sudo useradd -m -G audio,video -s /bin/bash browsing`
+#
+# Then add the following line in `visudo` (assuming my user is in the 'wheel'
+# group')
+# %wheel ALL=(browsing) NOPASSWD: ALL
+#
+# We add our user to the grou 'browsing'
+# sudo usermod -aG browsing black
+#
+# Change umask so the regular user can read and write the 'browsing' user files
+# sudo -iH -u browsing sh -c 'echo "umask 007" >> ~/.profile'
+#
+# Link Downloads folder to my home
+# ln -s /home/browsing/Downloads ~/
+
+xhost local:browsing
+cp -R ~/.config/pulse/cookie /home/browsing/pulse_cookie
+chmod 770 /home/browsing/pulse_cookie
+chown black:browsing /home/browsing/pulse_cookie
+
+sudo -iH -u browsing cp /home/browsing/pulse_cookie /home/browsing/.config/pulse/cookie
+sudo -iH -u browsing firejail --seccomp firefox

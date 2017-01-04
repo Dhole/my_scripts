@@ -1,5 +1,44 @@
 #! /bin/sh
 
+#set -e
+set -x
+
+reset_all () {
+    iptables -F
+    iptables -Z
+    ufw disable
+    iptables -X
+    iptables -P INPUT ACCEPT
+    iptables -P OUTPUT ACCEPT
+
+    ip route del default table 10
+    ip rule del table 10
+}
+
+novpn () {
+    DEVS="enp0s31f6 wlp4s0"
+    usr=novpn
+    gate=192.168.0.1
+
+    for dev in $DEVS
+    do
+        iptables -A ufw-user-output -o $dev -m owner --uid-owner $usr -j ACCEPT
+        iptables -A ufw-user-input -i $dev -m conntrack --ctstate ESTABLISHED -j ACCEPT
+
+        ip=`ip addr show dev $dev | awk '$1=="inet" {match($2,/[0-9.]+/,i); print i[0]}'`
+        iptables -t nat -A POSTROUTING -o $dev -m mark --mark 0xa -j SNAT --to-source $ip 
+
+        sysctl -w net.ipv4.conf.$dev.rp_filter=2                                                                                                
+    done
+
+    ip route add default via $gate table 10
+    ip route flush cache
+
+    iptables -t mangle -A OUTPUT -m owner --uid-owner $usr -j MARK --set-mark 0xa
+
+    ip rule add fwmark 0xa table 10
+}
+
 ufw_rules () {
     UFW=/usr/sbin/ufw
     VPN_PORT=2018
@@ -15,6 +54,18 @@ ufw_rules () {
     fi
 
     $UFW reset
+
+    #ip route add default via 192.168.0.1 table 10
+    #ip route flush cache
+    #ip rule add fwmark 0xa table 10
+    #iptables -t mangle -A OUTPUT -m owner --uid-owner novpn \
+    #      -j MARK --set-mark 0xa
+    #for dev in $DEVS
+    #do
+    #    iptables -A OUTPUT -o $dev -m owner --uid-owner novpn -j ACCEPT
+    #    iptables -t nat -A POSTROUTING -o $dev -m mark --mark 0xa \
+    #          -j SNAT --to-source 192.168.0.1
+    #done
 
     # Default policies
     $UFW default deny incoming
@@ -36,23 +87,40 @@ ufw_rules () {
     done
 
     # Allow VirtualBox network
-    $UFW allow in  on vboxnet0 from 192.168.56.0/24
-    $UFW allow out on vboxnet0 to   192.168.56.0/24
+    #$UFW allow in  on vboxnet0 from 192.168.56.0/24
+    #$UFW allow out on vboxnet0 to   192.168.56.0/24
+
+    # Allow KVM network
+    $UFW allow in  on virbr0   from 192.168.122.0/24
+    $UFW allow out on virbr0   to   192.168.122.0/24
 
     # DNS (in order to resolve openvpn server name)
     $UFW allow in  from any to any port 53
     $UFW allow out from any to any port 53
 
-    #$UFW reload
+    $UFW reload
     $UFW enable
 
     sysctl -w net.ipv6.conf.all.disable_ipv6=1
     sysctl -w net.ipv6.conf.default.disable_ipv6=1
+
+    # drop all IPv6 traffic
+    ip6tables -F
+    ip6tables -P INPUT DROP
+    ip6tables -P FORWARD DROP
+    ip6tables -P OUTPUT DROP
+    ip6tables -t filter -I INPUT 1 -j DROP
+    ip6tables -t filter -I INPUT 1 -i lo -j ACCEPT
+    ip6tables -t filter -I FORWARD 1 -j DROP
+    ip6tables -t filter -I OUTPUT 1 -j DROP
+    ip6tables -t filter -I OUTPUT 1 -o lo -j ACCEPT
 }
 
 if [ $(whoami) != "root" ]; then
     echo "Switching to root"
     sudo $0 $*
 else
+    reset_all
     ufw_rules $*
+    novpn
 fi
