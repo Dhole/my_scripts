@@ -1,5 +1,8 @@
 #! /bin/sh
 
+# sudo modprobe btusb
+# sudo modprobe uinput
+
 if [ "$1" = "gamepad" ]
 then
     wminput -c /home/black/.CWiid/gamepad.conf

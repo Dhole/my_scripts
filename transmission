@@ -1,0 +1,4 @@
+#! /bin/sh
+
+xhost local:media
+sudo -iH -u media firejail --seccomp transmission-gtk

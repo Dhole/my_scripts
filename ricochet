@@ -1,4 +1,4 @@
 #! /bin/sh
 
-cd $HOME/Downloads/ricochet
+cd $HOME/Apps/ricochet
 (./ricochet) &

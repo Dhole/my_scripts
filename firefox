@@ -15,11 +15,26 @@
 #
 # Link Downloads folder to my home
 # ln -s /home/browsing/Downloads ~/
+#
+# Get PulseAudio working
+# cp /etc/pulse/default.pa ~/.config/pulse/default.pa
+# Edit the file to have this line
+# load-module module-native-protocol-unix socket=/tmp/pulse-server
+# Add to /etc/pulse/daemon.conf
+# enable-memfd = yes
+# On every client, in ~/.config/pulse/client.conf
+# default-server = /tmp/pulse-server
+# enable-memfd = yes
+# Copy the cookies probably
+# Launch firejail with --whitelist=/tmp/pulse-server --whitelist=~/.pulse-cookie
 
-xhost local:browsing
-cp -R ~/.config/pulse/cookie /home/browsing/pulse_cookie
-chmod 770 /home/browsing/pulse_cookie
-chown black:browsing /home/browsing/pulse_cookie
+usr=browsing
 
-sudo -iH -u browsing cp /home/browsing/pulse_cookie /home/browsing/.config/pulse/cookie
-sudo -iH -u browsing firejail --seccomp firefox
+xhost local:$usr
+cp -R ~/.config/pulse/cookie /home/$usr/pulse_cookie
+chmod 770 /home/$usr/pulse_cookie
+chown black:$usr /home/$usr/pulse_cookie
+
+sudo -iH -u $usr cp /home/$usr/pulse_cookie /home/$usr/.config/pulse/cookie
+sudo -iH -u $usr cp /home/$usr/pulse_cookie /home/$usr/.pulse-cookie
+sudo -iH -u browsing firejail --seccomp firefox $@

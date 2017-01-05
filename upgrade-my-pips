@@ -1,5 +1,8 @@
 #! /bin/sh
 
-sudo pip3 install --upgrade mps-youtube
-sudo pip install --upgrade youtube_dl
-sudo pip install --upgrade youtube-dl
+#sudo pip3 install --upgrade mps-youtube
+#sudo pip install --upgrade youtube_dl
+#sudo pip install --upgrade youtube-dl
+
+sudo -iH -u media pip3 install --user --upgrade mps-youtube
+sudo -iH -u media pip3 install --user --upgrade youtube-dl
