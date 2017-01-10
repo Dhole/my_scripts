@@ -7,10 +7,10 @@ nocaps() {
   setxkbmap -option compose:caps
 }
 
-if [ "`setxkbmap -v | grep "pc+gb"`" = "" ]
+if [ "`setxkbmap -v | grep "pc+us"`" = "" ]
 then
-  echo "Switching to gb keyboard"
-  setxkbmap gb
+  echo "Switching to us keyboard"
+  setxkbmap us
   nocaps
 else
   echo "Switching to es keyboard"

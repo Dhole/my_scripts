@@ -28,7 +28,7 @@ novpn () {
         ip=`ip addr show dev $dev | awk '$1=="inet" {match($2,/[0-9.]+/,i); print i[0]}'`
         iptables -t nat -A POSTROUTING -o $dev -m mark --mark 0xa -j SNAT --to-source $ip 
 
-        sysctl -w net.ipv4.conf.$dev.rp_filter=2                                                                                                
+        sysctl -w net.ipv4.conf.$dev.rp_filter=2
     done
 
     ip route add default via $gate table 10
@@ -100,6 +100,9 @@ ufw_rules () {
 
     $UFW reload
     $UFW enable
+
+    # Allow kvm virtual network to send packets to tun0
+    iptables -A FORWARD -i virbr0 -o tun0 -j ACCEPT
 
     sysctl -w net.ipv6.conf.all.disable_ipv6=1
     sysctl -w net.ipv6.conf.default.disable_ipv6=1
