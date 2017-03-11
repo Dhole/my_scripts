@@ -4,7 +4,7 @@ set -e
 
 exec chromium \
   --proxy-server="socks://localhost:9050" \
-  --load-and-launch-app=/home/black/.config/chromium/Default/Extensions/bikioccmkafdpakkkcpdbppfkghcmihk/0.27.0_0/
+  --load-and-launch-app=/home/black/.config/chromium/Default/Extensions/bikioccmkafdpakkkcpdbppfkghcmihk/0.32.0_0/
 
 #exec chromium \
 #  --proxy-server="socks://localhost:9050" \

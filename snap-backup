@@ -81,6 +81,7 @@ do
     then
         num=$MONTHLY
     fi
+    num=`echo "$num - 1" | bc`
 
     for i in $(seq 1 $num)
     do

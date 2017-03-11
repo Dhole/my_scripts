@@ -1,5 +1,7 @@
 #! /bin/sh
 
+# Reset mappings
+setxkbmap -option
 # Map ctrl to CalsLock
 setxkbmap -option ctrl:nocaps
 # Map compose to right-ctrl AltGr

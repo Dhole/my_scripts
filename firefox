@@ -31,10 +31,12 @@
 usr=browsing
 
 xhost local:$usr
-cp -R ~/.config/pulse/cookie /home/$usr/pulse_cookie
-chmod 770 /home/$usr/pulse_cookie
-chown black:$usr /home/$usr/pulse_cookie
+sudo cp -R ~/.config/pulse/cookie /home/$usr/pulse_cookie
+sudo chmod 770 /home/$usr/pulse_cookie
+sudo chown black:$usr /home/$usr/pulse_cookie
 
 sudo -iH -u $usr cp /home/$usr/pulse_cookie /home/$usr/.config/pulse/cookie
 sudo -iH -u $usr cp /home/$usr/pulse_cookie /home/$usr/.pulse-cookie
-sudo -iH -u browsing firejail --seccomp firefox $@
+# PulseAudio is not working with firejail :(
+#sudo -iH -u browsing firejail --seccomp --whitelist=/tmp/pulse-server firefox $@
+sudo -iH -u browsing /usr/bin/firefox $@

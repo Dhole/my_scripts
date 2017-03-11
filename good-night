@@ -1,11 +1,34 @@
 #! /bin/sh
 
+set -e
 set -x
 
-# xscreensaver-command -lock
-rsync -av --delete --exclude=".notmuch" ~/Mail green-local:/mnt/disk/backup/
-rsync -av ~/.ssh ~/.gnupg ~/.purple green-local:/mnt/disk/backup/home/
-rdiff-backup --print-statistics --exclude "**.git" /media/data0/Documents \
-    green-local::/mnt/disk/backup/Documents
+# Update the system
+sudo pacman -Syu
 
+xscreensaver-command -lock
+
+HOST="192.168.0.166"
+
+# Backup folders containing secrets
+REMOTE_USER=home-backup
+SSH_KEY=~/.ssh/$REMOTE_USER
+SSH_OPT="-i $SSH_KEY"
+
+dirs="$HOME/.ssh $HOME/.gnupg $HOME/.purple"
+rsync -av -e "ssh $SSH_OPT" \
+    $dirs \
+    $REMOTE_USER@$HOST:/mnt/disk/backup/home/
+
+# Backup Mail
+REMOTE_USER=mail-backup
+SSH_KEY=~/.ssh/$REMOTE_USER
+SSH_OPT="-i $SSH_KEY"
+
+rsync -av --delete -e "ssh $SSH_OPT" --exclude=".notmuch" ~/Mail/ $REMOTE_USER@$HOST:/mnt/disk/backup/Mail
+
+# Backup Documents
+$HOME/bin/snap-backup
+
+# Suspend the system after the backup has finished
 systemctl suspend

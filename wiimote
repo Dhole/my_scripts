@@ -1,8 +1,8 @@
 #! /bin/sh
 
 # sudo modprobe btusb
-# sudo modprobe uinput
 # sudo systemctl start bluetooth.service
+sudo modprobe uinput
 sudo hciconfig hci0 up
 
 if [ "$1" = "gamepad" ]
