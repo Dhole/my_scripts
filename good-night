@@ -25,10 +25,20 @@ REMOTE_USER=mail-backup
 SSH_KEY=~/.ssh/$REMOTE_USER
 SSH_OPT="-i $SSH_KEY"
 
-rsync -av --delete -e "ssh $SSH_OPT" --exclude=".notmuch" ~/Mail/ $REMOTE_USER@$HOST:/mnt/disk/backup/Mail
+rsync -av --delete -e "ssh $SSH_OPT" --chmod=u=rwX,g=rX --exclude=".notmuch" ~/Mail/ $REMOTE_USER@$HOST:/mnt/disk/backup/Mail
+
+# Backup dev
+REMOTE_USER=personal-backup
+SSH_KEY=~/.ssh/$REMOTE_USER
+SSH_OPT="-i $SSH_KEY"
+
+dirs="/home/dev/Documents"
+rsync -av -e "ssh $SSH_OPT" \
+    $dirs \
+    $REMOTE_USER@$HOST:/mnt/disk/backup/dev/
 
 # Backup Documents
 $HOME/bin/snap-backup
 
 # Suspend the system after the backup has finished
-systemctl suspend
+#systemctl suspend

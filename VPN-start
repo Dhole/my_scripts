@@ -2,6 +2,18 @@
 
 sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
 sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
-sudo openvpn ~/VPN/AirVPN_Czech-Republic_UDP-2018.ovpn
-#sudo openvpn ~/VPN/AirVPN_France_UDP-2018.ovpn
-#sudo openvpn ~/VPN/AirVPN_Germany_UDP-2018.ovpn
+
+cd ~/VPN
+#sudo openvpn AirVPN_Austria_UDP-2018-AltEntry.ovpn
+#sudo openvpn AirVPN_Belgium_UDP-2018-AltEntry.ovpn
+sudo openvpn AirVPN_Canada_UDP-2018-AltEntry.ovpn
+#sudo openvpn AirVPN_Czech-Republic_UDP-2018-AltEntry.ovpn
+#sudo openvpn AirVPN_Germany_UDP-2018-AltEntry.ovpn
+#sudo openvpn AirVPN_Latvia_UDP-2018-AltEntry.ovpn
+#sudo openvpn AirVPN_Lithuania_UDP-2018-AltEntry.ovpn
+#sudo openvpn AirVPN_Netherlands_UDP-2018-AltEntry.ovpn
+#sudo openvpn AirVPN_Romania_UDP-2018-AltEntry.ovpn
+#sudo openvpn AirVPN_Spain_UDP-2018-AltEntry.ovpn
+#sudo openvpn AirVPN_Sweden_UDP-2018-AltEntry.ovpn
+#sudo openvpn AirVPN_Switzerland_UDP-2018-AltEntry.ovpn
+#sudo openvpn AirVPN_Ukraine_UDP-2018-AltEntry.ovpn

@@ -2,9 +2,11 @@
 
 set -e
 
-exec chromium \
-  --proxy-server="socks://localhost:9050" \
-  --load-and-launch-app=/home/black/.config/chromium/Default/Extensions/bikioccmkafdpakkkcpdbppfkghcmihk/0.32.0_0/
-
-#exec chromium \
+#exec /bin/chromium \
 #  --proxy-server="socks://localhost:9050" \
+#  --load-and-launch-app=/home/black/.config/chromium/Default/Extensions/bikioccmkafdpakkkcpdbppfkghcmihk/0.41.0_0/
+
+#/bin/chromium \
+#  --proxy-server="socks://localhost:9050"
+
+/bin/chromium

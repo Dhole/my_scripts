@@ -3,7 +3,8 @@
 # sudo modprobe btusb
 # sudo systemctl start bluetooth.service
 sudo modprobe uinput
-sudo hciconfig hci0 up
+#sudo hciconfig hci0 up
+sudo btmgmt power on
 
 if [ "$1" = "gamepad" ]
 then

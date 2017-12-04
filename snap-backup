@@ -47,6 +47,9 @@ ln -s $DATE current
 
 ### Delete old backups
 
+echo "Skipping deletion until I fix this..."
+exit 0
+
 # Get a list of all snapshots
 SNAPSHOTS=`echo "\
 cd $DST

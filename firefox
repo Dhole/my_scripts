@@ -29,14 +29,14 @@
 # Launch firejail with --whitelist=/tmp/pulse-server --whitelist=~/.pulse-cookie
 
 usr=browsing
-
+#
 xhost local:$usr
-sudo cp -R ~/.config/pulse/cookie /home/$usr/pulse_cookie
-sudo chmod 770 /home/$usr/pulse_cookie
-sudo chown black:$usr /home/$usr/pulse_cookie
-
-sudo -iH -u $usr cp /home/$usr/pulse_cookie /home/$usr/.config/pulse/cookie
-sudo -iH -u $usr cp /home/$usr/pulse_cookie /home/$usr/.pulse-cookie
+#sudo cp -R ~/.config/pulse/cookie /home/$usr/pulse_cookie
+#sudo chmod 770 /home/$usr/pulse_cookie
+#sudo chown black:$usr /home/$usr/pulse_cookie
+#
+#sudo -iH -u $usr cp /home/$usr/pulse_cookie /home/$usr/.config/pulse/cookie
+#sudo -iH -u $usr cp /home/$usr/pulse_cookie /home/$usr/.pulse-cookie
 # PulseAudio is not working with firejail :(
 #sudo -iH -u browsing firejail --seccomp --whitelist=/tmp/pulse-server firefox $@
 sudo -iH -u browsing /usr/bin/firefox $@
