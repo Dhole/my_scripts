@@ -24,7 +24,7 @@ MONTHLY=4
 # END OF CONFIGURATION #
 ########################
 
-DATE=`date "+%s.%Y-%m-%d"`
+DATE=`date -u "+%s.%Y-%m-%d"`
 
 echo "ls" | sftp $SSH_OPT $REMOTE_USER@$HOST
 
