@@ -35,11 +35,14 @@ def main(source_path, dest_path):
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         if len(sys.argv) == 2 and sys.argv[1] == '--default':
-            sys.argv[1] =  "/home/black/Downloads/bazzacuda/deviantart/"
-            sys.argv[2] =  "/run/media/black/40864c6d-2982-44ee-b391-a0b97777a1ce/data/data1/Imatges/authors"
+            src =  "/home/black/Downloads/bazzacuda/deviantart/"
+            dst =  "/run/media/black/40864c6d-2982-44ee-b391-a0b97777a1ce/data/data1/Imatges/authors"
         else:    
             print("Usage: {} SOURCE DEST".format(sys.argv[0]))
             print("Classify DeviantArt pictures from SOURCE folder into DEST folder.")
             sys.exit(1)
+    else:
+        src = sys.argv[1]
+        dst = sys.argv[2]
 
-    main(sys.argv[1], sys.argv[2])
+    main(src, dst)

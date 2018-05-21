@@ -35,6 +35,7 @@ SSH_OPT="-i $SSH_KEY"
 dirs="/home/dev/Documents"
 rsync -av -e "ssh $SSH_OPT" \
     $dirs \
+    --exclude="target/debug/incremental" \
     $REMOTE_USER@$HOST:/mnt/disk/backup/dev/
 
 # Backup Documents

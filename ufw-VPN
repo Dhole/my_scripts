@@ -24,6 +24,8 @@ novpn () {
     #gate=10.123.64.1
     #gate=10.254.134.1
     #gate=10.120.96.1
+    #gate=172.20.0.1
+    #gate=172.16.99.1
 
     for dev in $DEVS
     do

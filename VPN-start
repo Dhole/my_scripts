@@ -7,6 +7,7 @@ cd ~/VPN
 #sudo openvpn AirVPN_Austria_UDP-2018-AltEntry.ovpn
 #sudo openvpn AirVPN_Belgium_UDP-2018-AltEntry.ovpn
 sudo openvpn AirVPN_Canada_UDP-2018-AltEntry.ovpn
+#sudo openvpn AirVPN_United-States_UDP-2018.ovpn
 #sudo openvpn AirVPN_Czech-Republic_UDP-2018-AltEntry.ovpn
 #sudo openvpn AirVPN_Germany_UDP-2018-AltEntry.ovpn
 #sudo openvpn AirVPN_Latvia_UDP-2018-AltEntry.ovpn
