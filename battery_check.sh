@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 SLEEP_TIME=5   # Default time between checks.
 SAFE_PERCENT=30  # Still safe at this level.
@@ -8,7 +8,12 @@ CRITICAL_PERCENT=8  # Suspend when battery at this level.
 export DISPLAY=:0.0
 
 notify() {
-        notify-send -u critical "Battery level is low: $1%<br>Suspending soon..."
+    notify-send -u critical "Battery level is low: $1%<br>Suspending soon..."
+}
+
+suspend() {
+    #systemctl suspend &
+    \sudo zzz
 }
 
 while [ true ]; do
@@ -27,7 +32,7 @@ while [ true ]; do
             fi
             if [ $rem_bat -le $CRITICAL_PERCENT ]; then
                 SLEEP_TIME=1
-                systemctl suspend &
+                suspend
             fi
         fi
     else

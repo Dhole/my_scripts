@@ -12,5 +12,5 @@
 
 # New version
 setxkbmap -option
-setxkbmap -layout us
+#setxkbmap -layout us
 xmodmap ~/.Xmodmap
