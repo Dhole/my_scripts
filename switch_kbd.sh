@@ -13,9 +13,11 @@ then
   setxkbmap us
   ~/bin/keyboard.sh
   #nocaps
+  caps-lock-off
 else
   echo "Switching to es keyboard"
   setxkbmap es
   ~/bin/keyboard.sh
   #nocaps
+  caps-lock-off
 fi

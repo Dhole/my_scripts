@@ -1,12 +1,27 @@
 #! /bin/sh
 
+cleanup () {
+    echo "power off" | bluetoothctl &
+    sudo rfkill block bluetooth
+    sudo rm /var/service/bluetoothd
+}
+
+trap "cleanup" INT
+
 # sudo modprobe btusb
 # sudo systemctl start bluetooth.service
 sudo modprobe uinput
 #sudo hciconfig hci0 up
-sudo btmgmt power on
 
-if [ "$1" = "gamepad" ]
+#sudo btmgmt power on
+sudo rfkill unblock bluetooth
+sudo ln -sf /etc/sv/bluetoothd /var/service/
+echo "power on" | bluetoothctl
+
+if [ "$1" = "off" ]
+then
+    cleanup
+elif [ "$1" = "gamepad" ] 
 then
     wminput -c /home/black/.CWiid/gamepad.conf
 else
